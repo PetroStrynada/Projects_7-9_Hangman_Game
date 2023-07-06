@@ -12,7 +12,13 @@ class ViewController: UIViewController {
     var scoreLabel: UILabel!
     var quotationLabel: UILabel!
     var currentAnswer: UITextField!
-    var letterButtons = [UIButton]()
+    var characterButtons = [UIButton]()
+    let characters = ["A", "B", "C", "D", "E", "F",
+                      "G", "H", "I", "J","K", "L",
+                      "M", "N", "O", "P", "Q", "R",
+                      "S", "T", "U", "V", "W", "X",
+                      "Y", "Z", "0", "1", "2", "3",
+                      "4", "5", "6", "7", "8", "9"]
 
     var level = 0 {
         didSet {
@@ -42,9 +48,6 @@ class ViewController: UIViewController {
         let buttonWidth = 88.0
         let centerXAnchorButtonSpacerConstant = 100.0
 
-        let topAnchorLittleSpacerConstant = 20.0
-        let topAnchorMidSpacerConstant = 100.0
-        let widthAnchorSpacerMultiplier = 0.9
 
         levelLabel = UILabel()
         levelLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -99,24 +102,35 @@ class ViewController: UIViewController {
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonsView)
 
+
+        let columns = 6
+        let rows = 6
+
         let width = 65
         let height = 65
+        var characterIndex = -1
 
         for row in 0..<6 {
             for column in 0..<6 {
                 let letterButton = UIButton(type: .system)
                 letterButton.titleLabel?.font = midFont
-                letterButton.setTitle("W", for: .normal)
+                letterButton.setTitle(characters[characterIndex + 1], for: .normal)
+                characterIndex += 1
                 //letterButton.addTarget(self, action: #selector(letterTapped), for: .touchUpInside)
 
-                let frame = CGRect(x: column * width, y: row * height, width: width, height: height)
+                let frame = CGRect(x: column * Int(width), y: row * height, width: Int(width), height: height)
                 letterButton.frame = frame
 
                 buttonsView.addSubview(letterButton)
-                letterButtons.append(letterButton)
+                characterButtons.append(letterButton)
             }
         }
 
+
+        let topAnchorLittleSpacerConstant = 20.0
+        let topAnchorMidSpacerConstant = 100.0
+        let availableSpace = UIScreen.main.bounds.height - levelLabel.frame.maxY - topAnchorMidSpacerConstant
+        let widthAnchorSpacerMultiplier = 0.9
 
         NSLayoutConstraint.activate([
             levelLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
@@ -125,7 +139,7 @@ class ViewController: UIViewController {
             scoreLabel.centerYAnchor.constraint(equalTo: levelLabel.centerYAnchor),
             scoreLabel.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
 
-            quotationLabel.topAnchor.constraint(equalTo: levelLabel.bottomAnchor, constant: topAnchorMidSpacerConstant),
+            quotationLabel.topAnchor.constraint(equalTo: levelLabel.bottomAnchor, constant: min(topAnchorMidSpacerConstant, availableSpace)),
             quotationLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             quotationLabel.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: widthAnchorSpacerMultiplier),
 
@@ -145,9 +159,8 @@ class ViewController: UIViewController {
 
             buttonsView.topAnchor.constraint(equalTo: submit.bottomAnchor, constant: topAnchorLittleSpacerConstant),
             buttonsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            buttonsView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
             buttonsView.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor, multiplier: 0.5),
-            buttonsView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 1)
+            buttonsView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 1),
         ])
 
 
