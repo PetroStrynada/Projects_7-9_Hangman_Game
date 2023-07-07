@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FB72154D2A57F92B00695A34 /* levels.txt in Resources */ = {isa = PBXBuildFile; fileRef = FB72154C2A57F92B00695A34 /* levels.txt */; };
 		FBE0F3102A56CD7C00C5C413 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE0F30F2A56CD7C00C5C413 /* AppDelegate.swift */; };
 		FBE0F3122A56CD7C00C5C413 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE0F3112A56CD7C00C5C413 /* SceneDelegate.swift */; };
 		FBE0F3142A56CD7C00C5C413 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE0F3132A56CD7C00C5C413 /* ViewController.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FB72154C2A57F92B00695A34 /* levels.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = levels.txt; sourceTree = "<group>"; };
 		FBE0F30C2A56CD7C00C5C413 /* Projects_7-9_Hangman_Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Projects_7-9_Hangman_Game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBE0F30F2A56CD7C00C5C413 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FBE0F3112A56CD7C00C5C413 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 				FBE0F30F2A56CD7C00C5C413 /* AppDelegate.swift */,
 				FBE0F3112A56CD7C00C5C413 /* SceneDelegate.swift */,
 				FBE0F3132A56CD7C00C5C413 /* ViewController.swift */,
+				FB72154C2A57F92B00695A34 /* levels.txt */,
 				FBE0F3152A56CD7C00C5C413 /* Main.storyboard */,
 				FBE0F3182A56CD7E00C5C413 /* Assets.xcassets */,
 				FBE0F31A2A56CD7E00C5C413 /* LaunchScreen.storyboard */,
@@ -128,6 +131,7 @@
 				FBE0F31C2A56CD7E00C5C413 /* LaunchScreen.storyboard in Resources */,
 				FBE0F3192A56CD7E00C5C413 /* Assets.xcassets in Resources */,
 				FBE0F3172A56CD7C00C5C413 /* Main.storyboard in Resources */,
+				FB72154D2A57F92B00695A34 /* levels.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
