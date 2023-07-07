@@ -166,17 +166,30 @@ class ViewController: UIViewController {
 
     }
 
+
     override func viewDidLoad() {
         super.viewDidLoad()
         parseAndLoadLevel()
         loadLevelUI()
+
 
     }
 
     @objc func characterTapped(sender: UIButton) {
         guard let character = sender.title(for: .normal) else { return }
 
-        if answerStringArray[level].contains(character) == true {
+        let answer = answerStringArray[level]
+
+        if answer.contains(character) == true {
+            var updatedPlaceholder = String(currentAnswer.placeholder ?? "")
+            for (index, placeholderChar) in answer.enumerated() {
+                if placeholderChar == Character(character) {
+                    let charIndex = updatedPlaceholder.index(updatedPlaceholder.startIndex, offsetBy: index)
+                    updatedPlaceholder.replaceSubrange(charIndex...charIndex, with: String(character))
+                }
+            }
+            currentAnswer.placeholder = updatedPlaceholder
+
             score += 1
         } else {
             score -= 1
@@ -186,6 +199,7 @@ class ViewController: UIViewController {
 
     var questionStringArray = [String]()
     var answerStringArray = [String]()
+    var questionMarkArray = [String]()
     @objc func parseAndLoadLevel() {
 
         if let levelFileURL = Bundle.main.url(forResource: "levels", withExtension: "txt") {
@@ -197,19 +211,25 @@ class ViewController: UIViewController {
                     let parts = line.components(separatedBy: ": ")
                     guard parts.count == 2 else { continue }
                     questionStringArray.append(parts[0])
-                    answerStringArray.append(parts[1].replacingOccurrences(of: "|", with: ""))
-                    print(questionStringArray)
-                    print(answerStringArray)
+                    answerStringArray.append(parts[1])
+                    let questionMarks = String(repeating: "?", count: parts[1].count)
+                    questionMarkArray.append(questionMarks)
                 }
+                print(questionStringArray)
+                print(answerStringArray)
+                print(questionMarkArray)
             }
         }
     }
 
     @objc func loadLevelUI() {
         quotationLabel.text = questionStringArray[level].trimmingCharacters(in: .whitespacesAndNewlines)
-        //currentAnswer.text = answerStringArray[level].trimmingCharacters(in: .whitespacesAndNewlines)
-        //TODO: characters view
+        currentAnswer.placeholder = questionMarkArray[level].trimmingCharacters(in: .whitespacesAndNewlines)
+
     }
 
+
+
 }
+
 
