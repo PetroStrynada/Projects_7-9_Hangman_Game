@@ -103,15 +103,15 @@ class ViewController: UIViewController {
         view.addSubview(buttonsView)
 
 
-        let columns = 6
         let rows = 6
+        let columns = 6
 
         let width = 65
         let height = 65
         var characterIndex = -1
 
-        for row in 0..<6 {
-            for column in 0..<6 {
+        for row in 0..<rows {
+            for column in 0..<columns {
                 let letterButton = UIButton(type: .system)
                 letterButton.titleLabel?.font = midFont
                 letterButton.setTitle(characters[characterIndex + 1], for: .normal)
@@ -168,10 +168,36 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        parseAndLoadLevel()
+//        loadLevelUI()
+
     }
 
+    var questionString = ""
+    var answerString = ""
+    @objc func parseAndLoadLevel() {
 
+        if let levelFileURL = Bundle.main.url(forResource: "levels", withExtension: "txt") {
+            if let levelContents = try? String(contentsOf: levelFileURL) {
+                var lines = levelContents.components(separatedBy: "\n")
+                lines.shuffle()
+
+                for line in lines {
+                    let parts = line.components(separatedBy: ": ")
+                    guard parts.count == 2 else {continue}
+                    questionString = parts[0]
+                    answerString = parts[1].replacingOccurrences(of: "|", with: "")
+                    print(questionString)
+                    print(answerString)
+                }
+            }
+        }
+    }
+
+//    @objc func loadLevelUI() {
+//        quotationLabel.text = questionString.trimmingCharacters(in: .whitespacesAndNewlines)
+//        currentAnswer.text = answerString.trimmingCharacters(in: .whitespacesAndNewlines)
+//    }
 
 }
 
