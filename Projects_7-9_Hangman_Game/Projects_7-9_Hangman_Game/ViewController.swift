@@ -8,10 +8,16 @@
 import UIKit
 
 class ViewController: UIViewController {
+
     var levelLabel: UILabel!
     var scoreLabel: UILabel!
     var quotationLabel: UILabel!
     var currentAnswer: UITextField!
+
+    var questionStringArray = [String]()
+    var answerStringArray = [String]()
+    var questionMarkArray = [String]()
+
     var characterButtons = [UIButton]()
     let characters = ["A", "B", "C", "D", "E", "F",
                       "G", "H", "I", "J","K", "L",
@@ -42,7 +48,17 @@ class ViewController: UIViewController {
     let buttonsView = UIView()
     var lastQuestion = ""
 
-    override func loadView() {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        parseAndLoadGame()
+        setupUI()
+        loadKeyBoard(buttonsView)
+        lastQuestion = questionStringArray.last ?? "AAA"
+    }
+
+
+    @objc func setupUI() {
         view = UIView()
         view.backgroundColor = .white
 
@@ -50,7 +66,7 @@ class ViewController: UIViewController {
         let buttonCornerRadius = 10.0
         let buttonBorderColor = UIColor.lightGray.cgColor
         let buttonHeight = 44.0
-        let buttonWidth = 88.0
+        let buttonWidth = 154.0
         let centerXAnchorButtonSpacerConstant = 100.0
 
 
@@ -70,7 +86,7 @@ class ViewController: UIViewController {
 
         quotationLabel = UILabel()
         quotationLabel.translatesAutoresizingMaskIntoConstraints = false
-        quotationLabel.text = "Guess my name? It's ease I think"
+        quotationLabel.text = questionStringArray[level - 1].trimmingCharacters(in: .whitespacesAndNewlines)
         quotationLabel.numberOfLines = 0
         quotationLabel.lineBreakMode = .byWordWrapping
         quotationLabel.font = midFont
@@ -79,35 +95,24 @@ class ViewController: UIViewController {
 
         currentAnswer = UITextField()
         currentAnswer.translatesAutoresizingMaskIntoConstraints = false
-        currentAnswer.placeholder = "?????"
+        currentAnswer.placeholder = questionMarkArray[level - 1].trimmingCharacters(in: .whitespacesAndNewlines)
         currentAnswer.font = largeFont
         currentAnswer.textAlignment = .center
         currentAnswer.isUserInteractionEnabled = false
         view.addSubview(currentAnswer)
 
-        let submit = UIButton(type: .system)
-        submit.translatesAutoresizingMaskIntoConstraints = false
-        submit.setTitle("SUBMIT", for: .normal)
-        //submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
-        view.addSubview(submit)
-        submit.layer.borderWidth = buttonBorderWidth
-        submit.layer.cornerRadius = buttonCornerRadius
-        submit.layer.borderColor = buttonBorderColor
+        let playerSlots = UILabel()
+        playerSlots.translatesAutoresizingMaskIntoConstraints = false
+        playerSlots.text = "Single player"
+        playerSlots.font = smallFont
+        playerSlots.textAlignment = .center
+        view.addSubview(playerSlots)
+//        playerSlots.layer.borderWidth = buttonBorderWidth
+//        playerSlots.layer.cornerRadius = buttonCornerRadius
+//        playerSlots.layer.borderColor = buttonBorderColor
 
-        let clear = UIButton(type: .system)
-        clear.translatesAutoresizingMaskIntoConstraints = false
-        clear.setTitle("CLEAR", for: .normal)
-        //clear.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
-        view.addSubview(clear)
-        clear.layer.borderWidth = buttonBorderWidth
-        clear.layer.cornerRadius = buttonCornerRadius
-        clear.layer.borderColor = buttonBorderColor
-
-        //let buttonsView = UIView()
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonsView)
-
-        loadKeyBoard(buttonsView)
 
 
         let topAnchorLittleSpacerConstant = 20.0
@@ -130,17 +135,12 @@ class ViewController: UIViewController {
             currentAnswer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             currentAnswer.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: widthAnchorSpacerMultiplier),
 
-            submit.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor, constant: topAnchorLittleSpacerConstant),
-            submit.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -centerXAnchorButtonSpacerConstant),
-            submit.heightAnchor.constraint(equalToConstant: buttonHeight),
-            submit.widthAnchor.constraint(equalToConstant: buttonWidth),
+            playerSlots.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor, constant: topAnchorLittleSpacerConstant),
+            playerSlots.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            playerSlots.heightAnchor.constraint(equalToConstant: buttonHeight),
+//            playerSlots.widthAnchor.constraint(equalToConstant: buttonWidth),
 
-            clear.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: centerXAnchorButtonSpacerConstant),
-            clear.centerYAnchor.constraint(equalTo: submit.centerYAnchor),
-            clear.heightAnchor.constraint(equalToConstant: buttonHeight),
-            clear.widthAnchor.constraint(equalToConstant: buttonWidth),
-
-            buttonsView.topAnchor.constraint(equalTo: submit.bottomAnchor, constant: topAnchorLittleSpacerConstant),
+            buttonsView.topAnchor.constraint(equalTo: playerSlots.bottomAnchor, constant: topAnchorLittleSpacerConstant),
             buttonsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             buttonsView.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor, multiplier: 0.5),
             buttonsView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 1),
@@ -149,19 +149,6 @@ class ViewController: UIViewController {
 
     }
 
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        lastQuestion = questionStringArray.last ?? "AAA"
-        parseAndLoadGame()
-        loadLevelUI()
-
-    }
-
-
-    var questionStringArray = [String]()
-    var answerStringArray = [String]()
-    var questionMarkArray = [String]()
 
     @objc func parseAndLoadGame() {
 
@@ -178,10 +165,11 @@ class ViewController: UIViewController {
                     let questionMarks = String(repeating: "?", count: parts[1].count)
                     questionMarkArray.append(questionMarks)
                 }
-                print(questionStringArray)
-                print(answerStringArray)
-                print(questionMarkArray)
             }
+            print(lastQuestion)
+            print(questionStringArray)
+            print(answerStringArray)
+            print(questionMarkArray)
         }
     }
 
@@ -214,11 +202,7 @@ class ViewController: UIViewController {
 
 
 
-    @objc func loadLevelUI() {
-        quotationLabel.text = questionStringArray[level - 1].trimmingCharacters(in: .whitespacesAndNewlines)
-        currentAnswer.placeholder = questionMarkArray[level - 1].trimmingCharacters(in: .whitespacesAndNewlines)
 
-    }
 
 
     @objc func characterTapped(sender: UIButton) {
@@ -255,33 +239,59 @@ class ViewController: UIViewController {
 
 
     func nextLevel() {
-        if questionStringArray.last == lastQuestion {
+        if questionStringArray[level - 1] == lastQuestion {
             lastLevelAlert()
-
         } else {
             guessedCharacterCount = 0
             level += 1
             nextLevelAlert()
-            loadLevelUI()
+            setupUI()
         }
     }
 
     func lastLevelAlert() {
         let ac = UIAlertController(title: "Congratulations!", message: "You passed all the game", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "Reload game", style: .default))
-        return present(ac, animated: true)
+        let reloadGame = UIAlertAction(title: "Reload game", style: .default) {
+            [weak self] _ in
+            self?.restartGame()
+        }
+
+        ac.addAction(reloadGame)
+        present(ac, animated: true)
     }
 
     func nextLevelAlert() {
         let ac = UIAlertController(title: "Well done!", message: "Are you ready for level \(level)?", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "Let's go!", style: .default))
-        return present(ac, animated: true)
+        present(ac, animated: true)
     }
 
     func buttonsAppears() {
         for button in characterButtons {
             button.isHidden = false
         }
+    }
+
+    @objc func restartGame() {
+        level = 1
+        score = 0
+        guessedCharacterCount = 0
+        levelLabel.text = "Level: \(level)"
+        scoreLabel.text = "Score: \(score)"
+        quotationLabel.text = "Guess my name? It's ease I think"
+        currentAnswer.placeholder = "?????"
+
+        for button in characterButtons {
+            button.isHidden = false
+        }
+
+        // Clear any existing question and answer data
+        questionStringArray.removeAll()
+        answerStringArray.removeAll()
+        questionMarkArray.removeAll()
+
+        parseAndLoadGame()
+        setupUI()
     }
 
 
