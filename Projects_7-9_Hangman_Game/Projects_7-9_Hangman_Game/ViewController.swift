@@ -51,10 +51,10 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        parseAndLoadGame()
-        setupUI()
+        performSelector(inBackground: #selector(parseAndLoadGame), with: nil)
+        performSelector(onMainThread: #selector(setupUI), with: nil, waitUntilDone: false)
+        //TODO: perform in the main thread
         loadKeyBoard(buttonsView)
-        lastQuestion = questionStringArray.last ?? "AAA"
     }
 
 
@@ -62,12 +62,12 @@ class ViewController: UIViewController {
         view = UIView()
         view.backgroundColor = .white
 
-        let buttonBorderWidth = 1.0
-        let buttonCornerRadius = 10.0
-        let buttonBorderColor = UIColor.lightGray.cgColor
-        let buttonHeight = 44.0
-        let buttonWidth = 154.0
-        let centerXAnchorButtonSpacerConstant = 100.0
+//        let buttonBorderWidth = 1.0
+//        let buttonCornerRadius = 10.0
+//        let buttonBorderColor = UIColor.lightGray.cgColor
+//        let buttonHeight = 44.0
+//        let buttonWidth = 154.0
+//        let centerXAnchorButtonSpacerConstant = 100.0
 
 
         levelLabel = UILabel()
@@ -140,7 +140,7 @@ class ViewController: UIViewController {
 //            playerSlots.heightAnchor.constraint(equalToConstant: buttonHeight),
 //            playerSlots.widthAnchor.constraint(equalToConstant: buttonWidth),
 
-            buttonsView.topAnchor.constraint(equalTo: playerSlots.bottomAnchor, constant: topAnchorLittleSpacerConstant),
+            buttonsView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
             buttonsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             buttonsView.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor, multiplier: 0.5),
             buttonsView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 1),
@@ -166,14 +166,11 @@ class ViewController: UIViewController {
                     questionMarkArray.append(questionMarks)
                 }
             }
-            print(lastQuestion)
-            print(questionStringArray)
-            print(answerStringArray)
-            print(questionMarkArray)
         }
+        lastQuestion = questionStringArray.last ?? "AAA"
     }
 
-
+    //TODO: perform in the main thread
     @objc func loadKeyBoard(_ buttonsView: UIView) {
 
         let rows = 6
